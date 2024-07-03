@@ -14,6 +14,7 @@ import java.net.URL
 import android.util.Log
 import android.widget.Toast
 import android.os.Handler
+import java.io.IOException
 import java.lang.Runnable
 
 class RegistroActivity : AppCompatActivity() {
@@ -49,21 +50,33 @@ class RegistroActivity : AppCompatActivity() {
     inner class GetRegistrosTask : AsyncTask<Void, Void, String>() {
 
         override fun doInBackground(vararg params: Void?): String {
-            // URL del script PHP del servidor que maneja la obtencion de registros, tambien puede ser un servidor en la nube o local
             val url = URL("http://10.0.2.2/loginapp_server/getRegister.php")
             val connection = url.openConnection() as HttpURLConnection
             connection.requestMethod = "GET"
 
-            // lee la respuesta del servidor
-            val response = StringBuilder()
-            val reader = BufferedReader(InputStreamReader(connection.inputStream))
-            var line: String?
-            while (reader.readLine().also { line = it } != null) {
-                response.append(line)
+            try {
+                val responseCode = connection.responseCode
+                if (responseCode == HttpURLConnection.HTTP_OK) {
+                    val response = StringBuilder()
+                    BufferedReader(InputStreamReader(connection.inputStream)).use { reader ->
+                        var line: String? = reader.readLine()
+                        while (line != null) {
+                            response.append(line)
+                            line = reader.readLine()
+                        }
+                    }
+                    return response.toString()
+                } else {
+                    // Manejar códigos de respuesta diferentes a 200 aquí si es necesario
+                    throw IOException("Código de error HTTP: $responseCode")
+                }
+            } catch (e: IOException) {
+                // Manejar excepciones de IO de red
+                Log.e("RegistroActivity", "Error al leer la respuesta: ${e.message}")
+                return "" // O devuelve algún valor predeterminado que indique falla
+            } finally {
+                connection.disconnect()
             }
-            reader.close()
-
-            return response.toString()
         }
 
         override fun onPostExecute(result: String?) {
