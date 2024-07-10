@@ -37,14 +37,14 @@ class RegistroAdapterActivity(private val registros: MutableList<Registro>) : Re
     override fun onBindViewHolder(holder: RegistroViewHolder, position: Int) {
         val registro = registros[position]
         // asignar los datos del registro a las vistas correspondientes en el ViewHolder
-        holder.idTextView.text = registro.id.toString()
-        holder.id_cajaTextView.text = registro.idCaja.toString()
-        holder.sensor_1TextView.text = registro.sensor1.toString()
-        holder.sensor_2TextView.text = registro.sensor2.toString()
-        holder.sensor_3TextView.text = registro.sensor3.toString()
-        holder.sensor_4TextView.text = registro.sensor4.toString()
-        holder.sensor_5TextView.text = registro.sensor5.toString()
-        holder.fechaTextView.text = registro.fechaHora
+        holder.idTextView.text = "ID Registro: " + registro.id.toString()
+        holder.id_cajaTextView.text = "N° Caja: " + registro.idCaja.toString()
+        holder.sensor_1TextView.text = "Sensor 1: " + registro.sensor1.toString()
+        holder.sensor_2TextView.text = "Sensor 2: " + registro.sensor2.toString()
+        holder.sensor_3TextView.text = "Sensor 3: " + registro.sensor3.toString()
+        holder.sensor_4TextView.text = "Sensor 4: " + registro.sensor4.toString()
+        holder.sensor_5TextView.text = "Sensor 5: " + registro.sensor5.toString()
+        holder.fechaTextView.text = "Fecha: " + registro.fechaHora
 
         val intensidad = registro.sensor1 + registro.sensor2 + registro.sensor3 + registro.sensor4 + registro.sensor5
 
